@@ -1,19 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   arrayDivider.cpp
- * Author: Rent A Center
- * 
- * Created on June 26, 2018, 2:05 PM
- */
-
 #include "arrayDivider.h"
+#include "mda/mdaio.cpp"
+#include <string>
+#include <iostream>
 
-arrayDivider::arrayDivider() {
+using namespace std;
+
+arrayDivider::arrayDivider(char const *path, int sampling_frequency) {
+	FILE *input = jfopen(path, "rb");
+	MDAIO_HEADER *header = new MDAIO_HEADER;
+	mda_read_header(header,input); 
+	number_channels = header->dims[2];
+	number_timepoints = header->dims[1];
+	std::cout << "Number of channels is: " << number_channels <<endl;
+	std::cout << "NUmber of timepoints is: " << number_timepoints <<endl;
+	jfclose(input);
 }
 
 arrayDivider::arrayDivider(const arrayDivider& orig) {

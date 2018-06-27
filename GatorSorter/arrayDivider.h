@@ -1,23 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   arrayDivider.h
- * Author: Rent A Center
- *
- * Created on June 26, 2018, 2:05 PM
- */
-
+#include <string>
 #ifndef ARRAYDIVIDER_H
 #define ARRAYDIVIDER_H
 
+
+using namespace std;
+
 class arrayDivider {
 public:
-    arrayDivider();
+    arrayDivider(char const *path, int sampling_frequency);
     arrayDivider(const arrayDivider& orig);
+    int number_channels;
+    int number_timepoints;   
+    int number_segments;
+
     virtual ~arrayDivider();
 private:
 
