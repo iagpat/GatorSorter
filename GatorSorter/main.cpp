@@ -5,7 +5,8 @@ using namespace std;
 
 int main(int argc, char *argv[]) {	
 	int sampling_frequency = 24414;
-	arrayDivider("/home/drew/Desktop/725/raw.mda", sampling_frequency);
+	int64_t ram_limit = 1000000000;
+	arrayDivider("raw.mda", sampling_frequency, ram_limit);
 	std::cout <<"Process completed"<< endl;    
 	return 1;
 }

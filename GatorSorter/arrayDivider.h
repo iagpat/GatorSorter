@@ -7,11 +7,15 @@ using namespace std;
 
 class arrayDivider {
 public:
-    arrayDivider(char const *path, int sampling_frequency);
+    arrayDivider(char const *path, int sampling_frequency, int64_t ram_limit);
     arrayDivider(const arrayDivider& orig);
-    int number_channels;
-    int number_timepoints;   
-    int number_segments;
+	int data_type = 0;
+	int num_bytes_per_entry = 0;
+	int number_channels = 0;
+	int num_dims = 0;
+	int number_timepoints = 0;
+	int timepoints_per_segment = 0;
+	int number_segments = 0;
 
     virtual ~arrayDivider();
 private:
