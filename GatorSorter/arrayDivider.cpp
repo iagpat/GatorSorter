@@ -5,7 +5,7 @@
 
 using namespace std;
 
-arrayDivider::arrayDivider(char const *path, int sampling_frequency, int64_t ram_limit) {
+arrayDivider::arrayDivider(char const *path, int64_t sampling_frequency, int64_t ram_limit) {
 	FILE *input_file;
 	input_file = fopen(path,"rb"); //Opening the file
 	if (input_file == 0){
