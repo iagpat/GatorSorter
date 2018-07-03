@@ -11,6 +11,10 @@ options::options() {
 options::options(const options& orig) {
 }
 
+options::load_options() {
+
+}
+
 options::~options() {
 }
 
