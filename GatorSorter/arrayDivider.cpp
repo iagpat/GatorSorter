@@ -5,7 +5,7 @@
 
 using namespace std;
 
-arrayDivider::arrayDivider(char const *path, int64_t sampling_frequency, int64_t ram_limit) {
+arrayDivider::arrayDivider(char const *path, int64_t * sampling_frequency, int64_t * ram_limit) {
 	FILE *input_file;
 	input_file = fopen(path,"rb"); //Opening the file
 	if (input_file == 0){
@@ -37,8 +37,9 @@ arrayDivider::arrayDivider(char const *path, int64_t sampling_frequency, int64_t
 	//
 	//Segmentation calculator
 	//
-	number_segments = (num_bytes_per_entry*number_channels*number_timepoints) / ram_limit;
+	number_segments = (num_bytes_per_entry*number_channels*number_timepoints) / *ram_limit;
 	timepoints_per_segment = number_timepoints / number_segments;
+	
 	//
 	//Segementation machine
 	//

@@ -11,16 +11,20 @@ int main(int argc, char *argv[]) {
 	//
 
 	options *myoptions = new options;
-	int64_t min_freq = myoptions->min_freq;
-	int64_t max_freq = myoptions->max_freq;
-	int64_t sampling_frequency = myoptions->sampling_frequency;
-	int64_t ram_limit = myoptions->ram_limit;
+
 
 	//
 	//Pipeline
 	//
 		
-	arrayDivider("raw.mda", sampling_frequency, ram_limit);
+	arrayDivider("raw.mda", &(myoptions->sampling_frequency), &(myoptions->ram_limit));
+	
+	bandpass_filter(&(myoptions->min_freq), &(myoptions->max_freq), &(myoptions->sampling_frequency));
+
+	std::cout << myoptions->min_freq << endl;
+	std::cout << myoptions->max_freq << endl;
+	std::cout << myoptions->sampling_frequency << endl;
+
 	std::cout <<"Process completed"<< endl;    
 	return 1;
 }
