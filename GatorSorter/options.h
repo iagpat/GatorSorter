@@ -14,6 +14,11 @@ public:
 	int64_t max_freq = 6000;
 	int64_t sampling_frequency = 24414;
 	int64_t ram_limit = 1000000000;
+	int64_t number_channels = 1;
+	int64_t number_segments = 0;
+	int64_t timepoints_per_segment = 0;
+
+
 private:
 
 };

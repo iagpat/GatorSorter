@@ -139,7 +139,7 @@ class Filter{
 		double m_Fx;
 		double m_lambda;
 		double *m_taps;
-		double *m_sr;
+		float *m_sr;
 		void designLPF();
 		void designHPF();
 
@@ -152,7 +152,7 @@ class Filter{
 		Filter(filterType filt_t, int num_taps, double Fs, double Fl, double Fu);
 		~Filter( );
 		void init();
-		double do_sample(double data_sample);
+		float do_sample(float data_sample);
 		int get_error_flag(){return m_error_flag;};
 		void get_taps( double *taps );
 		int write_taps_to_file( char* filename );

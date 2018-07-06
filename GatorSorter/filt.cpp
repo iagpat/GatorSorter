@@ -55,9 +55,10 @@ Filter::Filter(filterType filt_t, int num_taps, double Fs, double Fx)
 	if( Fx <= 0 || Fx >= Fs/2 ) ECODE(-2);
 	if( m_num_taps <= 0 || m_num_taps > MAX_NUM_FILTER_TAPS ) ECODE(-3);
 
-	m_taps = m_sr = NULL;
+	m_taps = NULL;
+	m_sr = NULL;
 	m_taps = (double*)malloc( m_num_taps * sizeof(double) );
-	m_sr = (double*)malloc( m_num_taps * sizeof(double) );
+	m_sr = (float*)malloc( m_num_taps * sizeof(float) );
 	if( m_taps == NULL || m_sr == NULL ) ECODE(-4);
 	
 	init();
@@ -88,9 +89,10 @@ Filter::Filter(filterType filt_t, int num_taps, double Fs, double Fl,
 	if( Fu <= 0 || Fu >= Fs/2 ) ECODE(-13);
 	if( m_num_taps <= 0 || m_num_taps > MAX_NUM_FILTER_TAPS ) ECODE(-14);
 
-	m_taps = m_sr = NULL;
+	m_taps = NULL;
+	m_sr = NULL;
 	m_taps = (double*)malloc( m_num_taps * sizeof(double) );
-	m_sr = (double*)malloc( m_num_taps * sizeof(double) );
+	m_sr = (float*)malloc( m_num_taps * sizeof(float) );
 	if( m_taps == NULL || m_sr == NULL ) ECODE(-15);
 	
 	init();
@@ -245,21 +247,22 @@ Filter::init()
 	return;
 }
 
-double 
-Filter::do_sample(double data_sample)
+
+float
+Filter::do_sample(float data_sample)
 {
 	int i;
-	double result;
+	float result;
 
-	if( m_error_flag != 0 ) return(0);
+	if (m_error_flag != 0) return(0);
 
-	for(i = m_num_taps - 1; i >= 1; i--){
-		m_sr[i] = m_sr[i-1];
-	}	
+	for (i = m_num_taps - 1; i >= 1; i--) {
+		m_sr[i] = m_sr[i - 1];
+	}
 	m_sr[0] = data_sample;
 
 	result = 0;
-	for(i = 0; i < m_num_taps; i++) result += m_sr[i] * m_taps[i];
+	for (i = 0; i < m_num_taps; i++) result += m_sr[i] * m_taps[i];
 
 	return result;
 }

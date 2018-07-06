@@ -5,7 +5,7 @@
 
 using namespace std;
 
-arrayDivider::arrayDivider(char const *path, int64_t * sampling_frequency, int64_t * ram_limit) {
+arrayDivider::arrayDivider(char const *path, int64_t * sampling_frequency, int64_t * ram_limit, int64_t * number_channels, int64_t * number_segments, int64_t * timepoints_per_segment) {
 	FILE *input_file;
 	input_file = fopen(path,"rb"); //Opening the file
 	if (input_file == 0){
@@ -26,7 +26,7 @@ arrayDivider::arrayDivider(char const *path, int64_t * sampling_frequency, int64
 	if (num_read < 1 || num_dims != 2) {
 		printf("Problem reading input file.\n");
 	}
-	num_read = fread(&number_channels, 4, 1, input_file);
+	num_read = fread(number_channels, 4, 1, input_file);
 	if (num_read < 1) {
 		printf("Problem reading input file.\n");
 	}
@@ -37,14 +37,15 @@ arrayDivider::arrayDivider(char const *path, int64_t * sampling_frequency, int64
 	//
 	//Segmentation calculator
 	//
-	number_segments = (num_bytes_per_entry*number_channels*number_timepoints) / *ram_limit;
-	timepoints_per_segment = number_timepoints / number_segments;
+	*number_segments = (num_bytes_per_entry*(*number_channels)*number_timepoints) / *ram_limit;
+	
+	*timepoints_per_segment = number_timepoints / *number_segments;
 	
 	//
 	//Segementation machine
 	//
-	for (int j = 0; j < number_channels; j++) {	
-		for (int i = 0; i < number_segments;i++) {
+	for (int j = 0; j < *number_channels; j++) {	
+		for (int i = 0; i < *number_segments;i++) {
 			//Create new file
 			FILE *outfile;
 			string mystring = "temp/Channel_";
@@ -57,13 +58,19 @@ arrayDivider::arrayDivider(char const *path, int64_t * sampling_frequency, int64
 			outfile = fopen(name, "wb");
 			
 			//Read from origin
-			float *tmp=(float *)malloc(sizeof(float)*timepoints_per_segment); 
-			int problem = fread(tmp,sizeof(float),timepoints_per_segment,input_file); 
+			float *tmp=(float *)malloc(sizeof(float)*(*timepoints_per_segment)); 
+			int problem = fread(tmp,sizeof(float),*timepoints_per_segment,input_file); 
 			if (problem == 0) printf("Problem reading the data from the original file");
 			
+			std::cout << "When we initially segment the file, the origin size is: " << ftell(input_file) << endl; //debugging
+
 			//Write to new file
-			fwrite(tmp, sizeof(float), timepoints_per_segment, outfile);
+			fwrite(tmp, sizeof(float), *timepoints_per_segment, outfile);
+			
+			std::cout << "When we initially segment the file, the size is: " << ftell(outfile) << endl; //debugging
+
 			free(tmp); 
+			fclose(outfile);
 		}
 	}
 	fclose(input_file);
