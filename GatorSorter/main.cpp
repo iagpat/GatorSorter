@@ -2,6 +2,7 @@
 #include "bandpass_filter.h"
 #include "options.h"
 #include "thresholding.h"
+#include "get_spike_peaks.h"
 #include <iostream>
 
 using namespace std;
@@ -26,6 +27,7 @@ int main(int argc, char *argv[]) {
 	thresholding(&(myoptions->number_channels), &(myoptions->number_segments), &(myoptions->timepoints_per_segment), &(myoptions->absolute_threshold_in_micro_volts), &(myoptions->threshold_sign));
 
 	//4)
+	get_spike_peaks();
 
 
 	std::cout <<"Process completed"<< endl;    
