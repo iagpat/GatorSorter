@@ -7,7 +7,7 @@ using namespace std;
 
 class thresholding {
 public:
-	thresholding(int64_t * number_channels, int64_t * number_segments, int64_t * absolute_threshold_in_micro_volts, int64_t * threshold_sign);
+	thresholding(int64_t * number_channels, int64_t * number_segments, int64_t * timepoints_per_segment, int64_t * absolute_threshold_in_micro_volts, int64_t * threshold_sign);
 	thresholding(const thresholding& orig);
     virtual ~thresholding();
 private:
