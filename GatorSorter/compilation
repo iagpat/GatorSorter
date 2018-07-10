@@ -2,4 +2,4 @@ Linux:
 g++ -o build/arrayDivider.o -c arrayDivider.cpp -Wall && g++ -o build/main.o -c main.cpp -Wall && cd build  && g++ arrayDivider.o main.o -Wall && ./a.out && cd ..
 
 Windows:
-cl /EHsc main.cpp arrayDivider.cpp options.cpp bandpass_filter.cpp filt.cpp thresholding.cpp
+cl /EHsc main.cpp arrayDivider.cpp options.cpp bandpass_filter.cpp filt.cpp thresholding.cpp get_spike_peaks.cpp

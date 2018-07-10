@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 	thresholding(&(myoptions->number_channels), &(myoptions->number_segments), &(myoptions->timepoints_per_segment), &(myoptions->absolute_threshold_in_micro_volts), &(myoptions->threshold_sign));
 
 	//4)
-	get_spike_peaks();
+	get_spike_peaks(&(myoptions->max_freq), &(myoptions->sampling_frequency), &(myoptions->number_channels), &(myoptions->number_segments), &(myoptions->timepoints_per_segment));
 
 
 	std::cout <<"Process completed"<< endl;    
