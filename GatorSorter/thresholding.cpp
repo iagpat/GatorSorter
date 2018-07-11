@@ -2,25 +2,29 @@
 #include <string>
 #include <iostream>
 #include <stack>
+#include <omp.h>
 #include <fstream>
 
 using namespace std;
 
 thresholding::thresholding(int64_t * number_channels, int64_t * number_segments, int64_t * timepoints_per_segment, int64_t * absolute_threshold_in_micro_volts, int64_t * threshold_sign) {
-	float raw;
-	float thresholded;
-	string mystring;
-	FILE *input;
-	FILE *output;
-	const char *name;
+	std::cout << "Module started: thresholding" << std::endl;
 
 	//Case 1
 	if (*threshold_sign == -1) {
 		//Go through every file and every value. If the value is higher than negative "absolute_threshold_in_micro_volts", make it zero.
 		//If the value is lower than negative "absolute_threshold_in_micro_volts", make the value positive.
+		#pragma omp parallel for
 		for (int channel = 0; channel < *number_channels; channel++) { //For every channel 
+			#pragma omp parallel for
 			for (int segment = 0; segment < *number_segments; segment++) {//For every segment
 				//Find the file name of the bandpassed segmented file
+				float raw;
+				float thresholded;
+				string mystring;
+				FILE *input;
+				FILE *output;
+				const char *name;
 				mystring = "temp/filtered_channel_";
 				mystring += to_string(channel);
 				mystring += "_Segment_";
@@ -48,7 +52,7 @@ thresholding::thresholding(int64_t * number_channels, int64_t * number_segments,
 				for (int timepoint = 0; timepoint < *timepoints_per_segment; timepoint++) { //For every timepoint
 					int problem = fread(&raw, sizeof(float), 1, input);
 					if (problem != 1) std::cout << "Problem reading the data from the segmented raw file: " << problem << endl;
-					if (raw <= -(*absolute_threshold_in_micro_volts * 10 ^ -6)) {
+					if (raw <= -(((float)*absolute_threshold_in_micro_volts) / 1000000)) {
 						thresholded = -raw;
 					}
 					else {
@@ -70,8 +74,15 @@ thresholding::thresholding(int64_t * number_channels, int64_t * number_segments,
 		//Go through every file and every value. If the value is higher than positive "absolute_threshold_in_micro_volts", leave it alone. 
 		//If the values is lower than negative "absolute_threshold_in_micro_volts", make the value positive. If the value is in between 
 		//the positive "absolute_threshold_in_micro_volts" and the negative "absolute_threshold_in_micro_volts", make it zero.
+		#pragma omp parallel for
 		for (int channel = 0; channel < *number_channels; channel++) { //For every channel 
 			for (int segment = 0; segment < *number_segments; segment++) {//For every segment
+				float raw;
+				float thresholded;
+				string mystring;
+				FILE *input;
+				FILE *output;
+				const char *name;
 				//Find the file name of the bandpassed segmented file
 				mystring = "temp/filtered_channel_";
 				mystring += to_string(channel);
@@ -100,10 +111,10 @@ thresholding::thresholding(int64_t * number_channels, int64_t * number_segments,
 				for (int timepoint = 0; timepoint < *timepoints_per_segment; timepoint++) { //For every timepoint
 					int problem = fread(&raw, sizeof(float), 1, input);
 					if (problem != 1) std::cout << "Problem reading the data from the segmented raw file: " << problem << endl;
-					if (raw <= -(*absolute_threshold_in_micro_volts * 10 ^ -6)) {
+					if (raw <= -(((float)*absolute_threshold_in_micro_volts)/1000000)) {
 						thresholded = -raw;
 					}
-					else if (raw>= (*absolute_threshold_in_micro_volts * 10 ^ -6)) {
+					else if (raw>= (((float)*absolute_threshold_in_micro_volts)/1000000)) {
 						thresholded = raw;
 					}
 					else {
@@ -124,9 +135,16 @@ thresholding::thresholding(int64_t * number_channels, int64_t * number_segments,
 	else if (*threshold_sign == 1) {
 		//Go through every file and every value. If the value is higher than positive "absolute_threshold_in_micro_volts", leave it alone. 
 		//If the value is lower than positive "absolute_threshold_in_micro_volts", make it zero. 
+		#pragma omp parallel for
 		for (int channel = 0; channel < *number_channels; channel++) { //For every channel 
 			for (int segment = 0; segment < *number_segments; segment++) {//For every segment
-																		  //Find the file name of the bandpassed segmented file
+				float raw;
+				float thresholded;
+				string mystring;
+				FILE *input;
+				FILE *output;
+				const char *name;
+			    //Find the file name of the bandpassed segmented file
 				mystring = "temp/filtered_channel_";
 				mystring += to_string(channel);
 				mystring += "_Segment_";
@@ -154,7 +172,7 @@ thresholding::thresholding(int64_t * number_channels, int64_t * number_segments,
 				for (int timepoint = 0; timepoint < *timepoints_per_segment; timepoint++) { //For every timepoint
 					int problem = fread(&raw, sizeof(float), 1, input);
 					if (problem != 1) std::cout << "Problem reading the data from the segmented raw file: " << problem << endl;
-					if (raw >= (*absolute_threshold_in_micro_volts * 10 ^ -6)) {
+					if (raw >= (((float)*absolute_threshold_in_micro_volts)/1000000)) {
 						thresholded = raw;
 					}
 					else {
@@ -170,7 +188,8 @@ thresholding::thresholding(int64_t * number_channels, int64_t * number_segments,
 			}
 		}
 	}
-
+	
+	std::cout << "Module ended: thresholding" << std::endl;
 }
 
 thresholding::thresholding(const thresholding& orig) {

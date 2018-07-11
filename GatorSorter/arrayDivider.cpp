@@ -6,6 +6,7 @@
 using namespace std;
 
 arrayDivider::arrayDivider(char const *path, int64_t * sampling_frequency, int64_t * ram_limit, int64_t * number_channels, int64_t * number_segments, int64_t * timepoints_per_segment) {
+	std::cout << "Module started: arrayDivider" << std::endl;
 	FILE *input_file;
 	input_file = fopen(path,"rb"); //Opening the file
 	if (input_file == 0){
@@ -54,26 +55,22 @@ arrayDivider::arrayDivider(char const *path, int64_t * sampling_frequency, int64
 			mystring += to_string(i);
 			mystring += "_.mda";
 			const char *name = mystring.c_str();
-			printf(name);
 			outfile = fopen(name, "wb");
 			
 			//Read from origin
 			float *tmp=(float *)malloc(sizeof(float)*(*timepoints_per_segment)); 
 			int problem = fread(tmp,sizeof(float),*timepoints_per_segment,input_file); 
 			if (problem == 0) printf("Problem reading the data from the original file");
-			
-			std::cout << "When we initially segment the file, the origin size is: " << ftell(input_file) << endl; //debugging
 
 			//Write to new file
 			fwrite(tmp, sizeof(float), *timepoints_per_segment, outfile);
 			
-			std::cout << "When we initially segment the file, the size is: " << ftell(outfile) << endl; //debugging
-
 			free(tmp); 
 			fclose(outfile);
 		}
 	}
 	fclose(input_file);
+	std::cout << "Module ended: arrayDivider" << std::endl;
 }
 
 arrayDivider::arrayDivider(const arrayDivider& orig) {
